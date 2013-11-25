@@ -134,99 +134,6 @@ class FeatureContext extends BehatContext
     }
 
     /**
-     * @Given /^there is a self hypermedia link$/
-     */
-    public function thereIsASelfHypermediaLink()
-    {
-        $payload = $this->getScopePayload();
-
-        assertTrue(
-            property_exists($payload, '_links'),
-            "[_links] hypermedia property does not exist in current scope.\n{$this->debug($payload)}"
-        );
-
-        assertTrue(
-            property_exists($payload->_links, 'self'),
-            "[self] property does not exist in the [_links] hypermedia property.\n{$this->debug($payload)}"
-        );
-
-        assertSame(
-            $payload->_links->self,
-            $this->resource,
-            "Asserting the [self] hypermedia link matches.\n{$this->debug($payload)}"
-        );
-    }
-
-    /**
-     * @Given /^there is a self hypermedia link with uri "([^"]*)"$/
-     */
-    public function thereIsASelfHypermediaLinkWithUri($uri)
-    {
-        $payload = $this->getScopePayload();
-
-        assertTrue(
-            property_exists($payload, '_links'),
-            "[_links] hypermedia property does not exist in current scope.\n{$this->debug($payload)}"
-        );
-
-        assertTrue(
-            property_exists($payload->_links, 'self'),
-            "[self] property does not exist in the [_links] hypermedia property.\n{$this->debug($payload)}"
-        );
-
-        assertSame(
-            $payload->_links->self,
-            $uri,
-            "Asserting the [self] hypermedia link matches [$uri].\n{$this->debug($payload)}"
-        );
-    }
-
-    /**
-     * @Given /^there are optional hypermedia links:$/
-     */
-    public function thereAreOptionalHypermediaLinks(TableNode $linksTable)
-    {
-        $this->thereAreHypermediaLinks($linksTable, true);
-    }
-
-    /**
-     * @Given /^there are hypermedia links:$/
-     */
-    public function thereAreHypermediaLinks(TableNode $linksTable, $optional = false)
-    {
-        $payload = $this->getScopePayload();
-
-        foreach ($linksTable->getHash() as $row) {
-
-            if (!property_exists($payload->_links, $row['link'])) {
-                if ($optional === true) continue;
-
-                throw new Exception("[{$row['link']}] hypermedia property does not exist.\n{$this->debug($payload->_links)}");
-            }
-
-            assertTrue(
-                property_exists($payload->_links->{$row['link']}, 'method'),
-                "[{$row['link']}] hypermedia property does not contain [method] property.\n{$this->debug($payload->_links)}"
-            );
-            assertTrue(
-                property_exists($payload->_links->{$row['link']}, 'uri'),
-                "[{$row['link']}] hypermedia property does not contain [uri] property.\n{$this->debug($payload->_links)}"
-            );
-
-            assertSame(
-                $row['method'],
-                $payload->_links->{$row['link']}->method,
-                "Asserting [{$row['link']}] hypermedia property's [method] property matches.\n{$this->debug($payload->_links->{$row['link']})}"
-            );
-            assertSame(
-                $row['uri'],
-                $payload->_links->{$row['link']}->uri,
-                "Asserting [{$row['link']}] hypermedia property's [uri] property matches.\n{$this->debug($payload->_links->{$row['link']})}"
-            );
-        }
-    }
-
-    /**
      * @Given /^the "([^"]*)" property exists$/
      */
     public function thePropertyExists($property)
@@ -586,4 +493,3 @@ class FeatureContext extends BehatContext
     }
 
 }
-
