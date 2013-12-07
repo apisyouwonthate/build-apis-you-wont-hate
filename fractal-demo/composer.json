@@ -4,6 +4,7 @@
 	"keywords": ["framework", "laravel"],
 	"license": "MIT",
 	"require": {
+        "fzaninotto/Faker": "1.2.*",
 		"laravel/framework": "4.0.*",
 		"league/fractal": "dev-master"
 	},
