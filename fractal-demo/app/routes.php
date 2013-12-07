@@ -11,4 +11,4 @@
 |
 */
 
-Route::get('/beers', 'BeerController@index');
+Route::get('/users', 'UserController@index');

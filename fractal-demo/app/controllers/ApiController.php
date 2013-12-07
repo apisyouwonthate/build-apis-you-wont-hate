@@ -40,7 +40,7 @@ class ApiController extends Controller
         return $this;
     }
     
-    protected function respondWithItem(array $item, $callback)
+    protected function respondWithItem($item, $callback)
     {
         $resource = new ItemResource($item, $callback);
 
@@ -53,7 +53,7 @@ class ApiController extends Controller
         return $this->respondWithArray($output);
     }
 
-    protected function respondWithCollection(array $collection, $callback)
+    protected function respondWithCollection($collection, $callback)
     {
         $resource = new CollectionResource($collection, $callback);
 

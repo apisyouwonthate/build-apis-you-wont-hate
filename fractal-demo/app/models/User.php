@@ -19,6 +19,16 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password');
 
+    /**
+     * Relationship: Checkins
+     *
+     * @return Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function checkins()
+    {
+        return $this->hasMany('Checkin');
+    }
+
 	/**
 	 * Get the unique identifier for the user.
 	 *

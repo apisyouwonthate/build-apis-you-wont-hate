@@ -18,4 +18,14 @@ class Checkin extends Eloquent
     {
         return $this->belongsTo('User');
     }
+
+    /**
+     * Relationship: Place
+     *
+     * @return Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function place()
+    {
+        return $this->belongsTo('Place');
+    }
 }
