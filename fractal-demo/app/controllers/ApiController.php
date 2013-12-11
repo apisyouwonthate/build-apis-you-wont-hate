@@ -1,15 +1,15 @@
 <?php
 
 use League\Fractal\ItemResource;
-use League\Fractal\CollectionResource;
-use League\Fractal\PaginatorResource;
-use League\Fractal\ResourceManager;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Paginator;
+use League\Fractal\Manager;
 
 class ApiController extends Controller
 {
     protected $statusCode = 200;
 
-    public function __construct(ResourceManager $fractal)
+    public function __construct(Manager $fractal)
     {
         $this->fractal = $fractal;
 
@@ -42,7 +42,7 @@ class ApiController extends Controller
     
     protected function respondWithItem($item, $callback)
     {
-        $resource = new ItemResource($item, $callback);
+        $resource = new Item($item, $callback);
 
         $rootScope = $this->fractal->createData($resource);
 
@@ -55,7 +55,7 @@ class ApiController extends Controller
 
     protected function respondWithCollection($collection, $callback)
     {
-        $resource = new CollectionResource($collection, $callback);
+        $resource = new Collection($collection, $callback);
 
         $rootScope = $this->fractal->createData($resource);
 
@@ -66,10 +66,9 @@ class ApiController extends Controller
         return $this->respondWithArray($output);
     }
 
-    protected function respondWithPaginator(array $collection, $callback)
+    protected function respondWithPaginator($collection, $callback)
     {
-        // 
-        $resource = new PaginatorResource($collection, $callback);
+        $resource = new PaginatedCollection($collection, $callback);
 
         // Pull the actual paginator from the resource
         $paginator = $collection->getPaginator();
@@ -94,7 +93,7 @@ class ApiController extends Controller
             $pagination['links']['next'] = $paginator->getUrl($paginator->getCurrentPage() + 1);
         }
 
-        $rootScope = $this->fractal->createData($collection);
+        $rootScope = $this->fractal->createData($resource);
 
         $output = [
             'pagination' => $pagination,

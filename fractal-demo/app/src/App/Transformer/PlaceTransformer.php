@@ -1,21 +1,22 @@
-<?php namespace App\Processor;
+<?php namespace App\Transformer;
 
 use Place;
+use League\Fractal\TransformerAbstract;
 
-use League\Fractal\CollectionResource;
-use League\Fractal\ProcessorAbstract;
-use League\Fractal\Scope;
-
-class PlaceProcessor extends ProcessorAbstract
+class PlaceTransformer extends TransformerAbstract
 {
+    protected $availableEmbeds = [
+        'checkins'
+    ];
+
     /**
      * Turn this item object into a generic array
      *
      * @return array
      */
-    public function process(Scope $scope, Place $place)
+    public function transform(Place $place)
     {
-        $data = [
+        return [
             'id'           => (int) $place->id,
             'name'         => $place->name,
             'lat'          => $place->lat,
@@ -28,13 +29,17 @@ class PlaceProcessor extends ProcessorAbstract
             'website'      => $place->website,
             'phone'        => $place->phone,
         ];
-
-        if ($scope->isRequested('checkins') and $place->checkins) {
-            $resources = new CollectionResource($place->checkins, CheckinProcessor::class);
-            $data['checkins'] = $scope->embedChildScope('checkins', $resources);
-        }
-
-        return $data;
     }
 
+    /**
+     * Embed Checkins
+     *
+     * @return League\Fractal\Resource\Collection
+     */
+    public function embedCheckins(Place $place)
+    {
+        $checkins = $place->checkins;
+
+        return $this->collectionResource($checkins, new CheckinTransformer);
+    }
 }

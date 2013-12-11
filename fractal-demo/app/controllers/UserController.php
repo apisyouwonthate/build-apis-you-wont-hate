@@ -1,6 +1,6 @@
 <?php
 
-use App\Processor\UserProcessor;
+use App\Transformer\UserTransformer;
 
 class UserController extends ApiController
 {
@@ -8,6 +8,6 @@ class UserController extends ApiController
     {
         $users = User::take(10)->get();
 
-        return $this->respondWithCollection($users, UserProcessor::class);
+        return $this->respondWithCollection($users, new UserTransformer);
     }
 }
