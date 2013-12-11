@@ -10,4 +10,11 @@ class UserController extends ApiController
 
         return $this->respondWithCollection($users, new UserTransformer);
     }
+
+    public function show($id)
+    {
+        $user = User::find($id);
+
+        return $this->respondWithItem($user, new UserTransformer);
+    }
 }

@@ -12,3 +12,7 @@
 */
 
 Route::get('/users', 'UserController@index');
+Route::get('/users/{id}', 'UserController@show');
+
+Route::get('/places', 'PlaceController@index');
+Route::get('/places/{id}', 'PlaceController@show');

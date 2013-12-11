@@ -1,8 +1,7 @@
 <?php
 
-use League\Fractal\ItemResource;
 use League\Fractal\Resource\Collection;
-use League\Fractal\Resource\Paginator;
+use League\Fractal\Resource\Item;
 use League\Fractal\Manager;
 
 class ApiController extends Controller
