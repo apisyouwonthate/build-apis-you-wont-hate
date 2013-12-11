@@ -46,11 +46,7 @@ class ApiController extends Controller
 
         $rootScope = $this->fractal->createData($resource);
 
-        $output = [
-            'data' => $rootScope->toArray(),
-        ];
-
-        return $this->respondWithArray($output);
+        return $this->respondWithArray($rootScope->toArray());
     }
 
     protected function respondWithCollection($collection, $callback)
@@ -59,48 +55,7 @@ class ApiController extends Controller
 
         $rootScope = $this->fractal->createData($resource);
 
-        $output = [
-            'data' => $rootScope->toArray(),
-        ];
-
-        return $this->respondWithArray($output);
-    }
-
-    protected function respondWithPaginator($collection, $callback)
-    {
-        $resource = new PaginatedCollection($collection, $callback);
-
-        // Pull the actual paginator from the resource
-        $paginator = $collection->getPaginator();
-
-        $pagination = [
-            'total' => (int) $paginator->getTotal(),
-            'count' => (int) $paginator->count(),
-            'per_page' => (int) $paginator->getPerPage(),
-            'current_page' => (int) $paginator->getCurrentPage(),
-            'total_pages' => (int) $paginator->getLastPage(),
-        ];
-
-        $pagination['links'] = [];
-
-        $paginator->appends(array_except(Request::query(), ['page']));
-
-        if ($paginator->getCurrentPage() > 1) {
-            $pagination['links']['previous'] = $paginator->getUrl($paginator->getCurrentPage() - 1);
-        }
-
-        if ($paginator->getCurrentPage() < $paginator->getLastPage()) {
-            $pagination['links']['next'] = $paginator->getUrl($paginator->getCurrentPage() + 1);
-        }
-
-        $rootScope = $this->fractal->createData($resource);
-
-        $output = [
-            'pagination' => $pagination,
-            'data' => $rootScope->toArray(),
-        ];
-
-        return $this->respondWithArray($output);
+        return $this->respondWithArray($rootScope->toArray());
     }
 
     protected function respondWithArray(array $array, array $headers = [])
