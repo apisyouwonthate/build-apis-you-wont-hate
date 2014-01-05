@@ -6,7 +6,8 @@
 	"require": {
 		"fzaninotto/Faker": "1.2.*",
 		"laravel/framework": "4.0.*",
-		"league/fractal": "0.6.*"
+		"league/fractal": "0.6.*",
+		"itsgoingd/clockwork": "~1.3"
 	},
 	"autoload": {
 		"classmap": [

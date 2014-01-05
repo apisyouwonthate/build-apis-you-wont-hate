@@ -20,6 +20,19 @@ class ApiController extends Controller
 
         // Are we going to try and include embedded data?
         $this->fractal->setRequestedScopes(explode(',', Input::get('embed')));
+
+        $this->fireDebugFilters();
+    }
+
+    public function fireDebugFilters()
+    {
+        $this->beforeFilter(function() {
+            Event::fire('clockwork.controller.start');
+        });
+
+        $this->afterFilter(function() {
+            Event::fire('clockwork.controller.end');
+        });
     }
 
     /**

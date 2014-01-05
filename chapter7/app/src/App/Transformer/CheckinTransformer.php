@@ -1,7 +1,6 @@
 <?php namespace App\Transformer;
 
 use Checkin;
-
 use League\Fractal\TransformerAbstract;
 
 class CheckinTransformer extends TransformerAbstract
@@ -12,7 +11,8 @@ class CheckinTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableEmbeds = [
-        'place'
+        'place',
+        'user',
     ];
 
     /**
@@ -38,5 +38,17 @@ class CheckinTransformer extends TransformerAbstract
         $place = $checkin->place;
 
         return $this->item($place, new PlaceTransformer);
+    }
+
+    /**
+     * Embed User
+     *
+     * @return League\Fractal\Resource\Item
+     */
+    public function embedUser(Checkin $checkin)
+    {
+        $user = $checkin->user;
+
+        return $this->item($user, new UserTransformer);
     }
 }

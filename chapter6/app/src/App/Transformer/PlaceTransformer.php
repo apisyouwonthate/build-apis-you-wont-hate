@@ -5,10 +5,6 @@ use League\Fractal\TransformerAbstract;
 
 class PlaceTransformer extends TransformerAbstract
 {
-    protected $availableEmbeds = [
-        'checkins'
-    ];
-
     /**
      * Turn this item object into a generic array
      *
@@ -29,17 +25,5 @@ class PlaceTransformer extends TransformerAbstract
             'website'      => $place->website,
             'phone'        => $place->phone,
         ];
-    }
-
-    /**
-     * Embed Checkins
-     *
-     * @return League\Fractal\Resource\Collection
-     */
-    public function embedCheckins(Place $place)
-    {
-        $checkins = $place->checkins;
-
-        return $this->collectionResource($checkins, new CheckinTransformer);
     }
 }

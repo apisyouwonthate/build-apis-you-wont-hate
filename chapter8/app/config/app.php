@@ -114,6 +114,8 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 
+		'Clockwork\Support\Laravel\ClockworkServiceProvider',
+
 	),
 
 	/*
@@ -178,6 +180,8 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
+
+	    'Clockwork' => 'Clockwork\Support\Laravel\Facade',
 
 	),
 

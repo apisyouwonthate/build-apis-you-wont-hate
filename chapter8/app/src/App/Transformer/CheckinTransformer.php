@@ -1,6 +1,7 @@
 <?php namespace App\Transformer;
 
 use Checkin;
+use Log;
 
 use League\Fractal\TransformerAbstract;
 
@@ -12,7 +13,8 @@ class CheckinTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableEmbeds = [
-        'place'
+        'place',
+        'user',
     ];
 
     /**
@@ -37,6 +39,22 @@ class CheckinTransformer extends TransformerAbstract
     {
         $place = $checkin->place;
 
+        Log::info("Embedding place-{$place->id} into checkin-{$checkin->id}");
+
         return $this->item($place, new PlaceTransformer);
+    }
+
+    /**
+     * Embed User
+     *
+     * @return League\Fractal\Resource\Item
+     */
+    public function embedUser(Checkin $checkin)
+    {
+        $user = $checkin->user;
+
+        Log::info("Embedding user-{$user->id} into checkin-{$checkin->id}");
+
+        return $this->item($user, new UserTransformer);
     }
 }
