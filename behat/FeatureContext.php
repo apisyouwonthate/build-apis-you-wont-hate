@@ -54,10 +54,7 @@ class FeatureContext extends BehatContext
      * The current scope within the response payload
      * which conditions are asserted against.
      */
-    protected $scope = [
-        'property' => null,
-        'position' => 'first',
-    ];
+    protected $scope;
 
     /**
      * Initializes context.
@@ -71,7 +68,7 @@ class FeatureContext extends BehatContext
 
         $this->client = new Client($parameters['base_url'], $config);
         $this->client->setDefaultHeaders([
-            'Accept' => 'application/vnd.com.kapture.api-v4+json',
+            'Accept' => 'application/vnd.com.example.api-v1+json',
             'Authorization' => "Bearer {$parameters['access_token']}",
         ]);
     }
@@ -109,8 +106,7 @@ class FeatureContext extends BehatContext
                         ->$method($resource)
                         ->send();
             }
-        }
-        catch (BadResponseException $e) {
+        } catch (BadResponseException $e) {
 
             $response = $e->getResponse();
 
@@ -130,7 +126,30 @@ class FeatureContext extends BehatContext
      */
     public function iGetAResponse($statusCode)
     {
-        assertSame($statusCode, $this->getResponse()->getStatusCode(), $this->getResponse()->getBody());
+        $response = $this->getResponse();
+        $contentType = $response->getHeader('Content-Type');
+
+        if ($contentType === 'application/json') {
+            $bodyOutput = $response->getBody();
+        } else {
+            $bodyOutput = 'Output is '.$contentType.', which is not JSON and is therefore scary. Run the request manually.';
+        }
+        assertSame($statusCode, $this->getResponse()->getStatusCode(), $bodyOutput);
+    }
+
+    /**
+     * @Given /^the "([^"]*)" property equals "([^"]*)"$/
+     */
+    public function thePropertyEquals($property, $expectedValue)
+    {
+        $payload = $this->getScopePayload();
+        $actualValue = $this->arrayGet($payload, $property);
+
+        assertEquals(
+            $actualValue,
+            $expectedValue,
+            "Asserting the [$property] property in current scope equals [$expectedValue]: ".json_encode($payload)
+        );
     }
 
     /**
@@ -140,10 +159,19 @@ class FeatureContext extends BehatContext
     {
         $payload = $this->getScopePayload();
 
-        assertTrue(
-            property_exists($payload, $property),
-            "Asserting the [$property] property exists in current scope.\n{$this->debug($payload)}"
+        $message = sprintf(
+            'Asserting the [%s] property exists in the scope [%s]: %s',
+            $property,
+            $this->scope,
+            json_encode($payload)
         );
+
+        if (is_object($payload)) {
+            assertTrue(array_key_exists($property, get_object_vars($payload)), $message);
+
+        } else {
+            assertTrue(array_key_exists($property, $payload), $message);
+        }
     }
 
     /**
@@ -153,9 +181,26 @@ class FeatureContext extends BehatContext
     {
         $payload = $this->getScopePayload();
 
+        $actualValue = $this->arrayGet($payload, $property);
+
         assertTrue(
-            is_array($payload->$property),
-            "Asserting the [$property] property in current scope is an array.\n{$this->debug($payload)}"
+            is_array($actualValue),
+            "Asserting the [$property] property in current scope [{$this->scope}] is an array: ".json_encode($payload)
+        );
+    }
+
+    /**
+     * @Given /^the "([^"]*)" property is an object$/
+     */
+    public function thePropertyIsAnObject($property)
+    {
+        $payload = $this->getScopePayload();
+
+        $actualValue = $this->arrayGet($payload, $property);
+
+        assertTrue(
+            is_object($actualValue),
+            "Asserting the [$property] property in current scope [{$this->scope}] is an object: ".json_encode($payload)
         );
     }
 
@@ -165,10 +210,11 @@ class FeatureContext extends BehatContext
     public function thePropertyIsAnEmptyArray($property)
     {
         $payload = $this->getScopePayload();
+        $scopePayload = $this->arrayGet($payload, $property);
 
         assertTrue(
-            is_array($payload->$property) and $payload->$property === [],
-            "Asserting the [$property] property in current scope is an empty array.\n{$this->debug($payload)}"
+            is_array($scopePayload) and $scopePayload === [],
+            "Asserting the [$property] property in current scope [{$this->scope}] is an empty array: ".json_encode($payload)
         );
     }
 
@@ -181,22 +227,8 @@ class FeatureContext extends BehatContext
 
         assertCount(
             $count,
-            $payload->$property,
-            "Asserting the [$property] property contains [$count] items.\n{$this->debug($payload)}"
-        );
-    }
-
-    /**
-     * @Given /^the "([^"]*)" property is an object$/
-     */
-    public function thePropertyIsAnObject($property)
-    {
-        $payload = $this->getScopePayload();
-
-        assertInstanceOf(
-            'stdClass',
-            $payload->$property,
-            "Asserting the [$property] property in current scope is an object.\n{$this->debug($payload)}"
+            $this->arrayGet($payload, $property),
+            "Asserting the [$property] property contains [$count] items: ".json_encode($payload)
         );
     }
 
@@ -209,8 +241,8 @@ class FeatureContext extends BehatContext
 
         isType(
             'int',
-            $payload->$property,
-            "Asserting the [$property] property in current scope is an integer.\n{$this->debug($payload)}"
+            $this->arrayGet($payload, $property),
+            "Asserting the [$property] property in current scope [{$this->scope}] is an integer: ".json_encode($payload)
         );
     }
 
@@ -223,8 +255,26 @@ class FeatureContext extends BehatContext
 
         isType(
             'string',
-            $payload->$property,
-            "Asserting the [$property] property in current scope is a string.\n{$this->debug($payload)}"
+            $this->arrayGet($payload, $property),
+            "Asserting the [$property] property in current scope [{$this->scope}] is a string: ".json_encode($payload)
+        );
+    }
+
+    /**
+     * @Given /^the "([^"]*)" property is a string equalling "([^"]*)"$/
+     */
+    public function thePropertyIsAStringEqualling($property, $expectedValue)
+    {
+        $payload = $this->getScopePayload();
+
+        $this->thePropertyIsAString($property);
+
+        $actualValue = $this->arrayGet($payload, $property);
+
+        assertSame(
+            $actualValue,
+            $expectedValue,
+            "Asserting the [$property] property in current scope [{$this->scope}] is a string equalling [$expectedValue]."
         );
     }
 
@@ -236,74 +286,46 @@ class FeatureContext extends BehatContext
         $payload = $this->getScopePayload();
 
         assertTrue(
-            gettype($payload->$property) == 'boolean',
-            "Asserting the [$property] property in current scope is a boolean.\n{$this->debug($payload)}"
-        );
-    }
-
-    /**
-     * @Given /^the "([^"]*)" property equals "([^"]*)"$/
-     */
-    public function thePropertyEquals($property, $value)
-    {
-        $payload = $this->getScopePayload();
-
-        assertEquals(
-            $payload->$property,
-            $value,
-            "Asserting the [$property] property in current scope equals [$value].\n{$this->debug($payload)}"
+            gettype($this->arrayGet($payload, $property)) == 'boolean',
+            "Asserting the [$property] property in current scope [{$this->scope}] is a boolean."
         );
     }
 
     /**
      * @Given /^the "([^"]*)" property is a boolean equalling "([^"]*)"$/
      */
-    public function thePropertyIsABooleanEqualling($property, $value)
+    public function thePropertyIsABooleanEqualling($property, $expectedValue)
     {
         $payload = $this->getScopePayload();
+        $actualValue = $this->arrayGet($payload, $property);
 
-        if ( ! in_array($value, ['true', 'false'])) {
+        if (! in_array($expectedValue, ['true', 'false'])) {
             throw new \InvalidArgumentException("Testing for booleans must be represented by [true] or [false].");
         }
 
         $this->thePropertyIsABoolean($property);
 
         assertSame(
-            $payload->$property,
-            $value == 'true',
-            "Asserting the [$property] property in current scope is a boolean equalling [$value].\n{$this->debug($payload)}"
-        );
-    }
-
-    /**
-     * @Given /^the "([^"]*)" property is a string equalling "([^"]*)"$/
-     */
-    public function thePropertyIsAStringEqualling($property, $value)
-    {
-        $payload = $this->getScopePayload();
-
-        $this->thePropertyIsAString($property);
-
-        assertSame(
-            $payload->$property,
-            $value,
-            "Asserting the [$property] property in current scope is a string equalling [$value].\n{$this->debug($payload)}"
+            $actualValue,
+            $expectedValue == 'true',
+            "Asserting the [$property] property in current scope [{$this->scope}] is a boolean equalling [$expectedValue]."
         );
     }
 
     /**
      * @Given /^the "([^"]*)" property is a integer equalling "([^"]*)"$/
      */
-    public function thePropertyIsAIntegerEqualling($property, $value)
+    public function thePropertyIsAIntegerEqualling($property, $expectedValue)
     {
         $payload = $this->getScopePayload();
+        $actualValue = $this->arrayGet($payload, $property);
 
         $this->thePropertyIsAnInteger($property);
 
         assertSame(
-            $payload->$property,
-            (int) $value,
-            "Asserting the [$property] property in current scope is an integer equalling [$value].\n{$this->debug($payload)}"
+            $actualValue,
+            (int) $expectedValue,
+            "Asserting the [$property] property in current scope [{$this->scope}] is an integer equalling [$expectedValue]."
         );
     }
 
@@ -313,37 +335,34 @@ class FeatureContext extends BehatContext
     public function thePropertyIsEither($property, PyStringNode $options)
     {
         $payload = $this->getScopePayload();
+        $actualValue = $this->arrayGet($payload, $property);
 
         $valid = explode("\n", (string) $options);
 
         assertTrue(
-            in_array($payload->$property, $valid),
+            in_array($actualValue, $valid),
             sprintf(
-                "Asserting the [%s] property in current scope is in array of valid options [%s].\n%s",
+                "Asserting the [%s] property in current scope [{$this->scope}] is in array of valid options [%s].",
                 $property,
-                implode(', ', $valid),
-                $this->debug($payload)
+                implode(', ', $valid)
             )
         );
     }
 
     /**
      * @Given /^scope into the first "([^"]*)" property$/
-     *
-     * @todo Adjust regex to remove redundent method.
      */
-    public function scopeIntoTheFirstProperty($property)
+    public function scopeIntoTheFirstProperty($scope)
     {
-        $this->scopeIntoTheProperty($property);
+        $this->scope = "{$scope}.0";
     }
 
     /**
      * @Given /^scope into the "([^"]*)" property$/
      */
-    public function scopeIntoTheProperty($property)
+    public function scopeIntoTheProperty($scope)
     {
-        $position = 'first';
-        $this->scope = compact('property', 'position');
+        $this->scope = $scope;
     }
 
     /**
@@ -361,7 +380,7 @@ class FeatureContext extends BehatContext
      */
     public function resetScope()
     {
-        $this->scope = ['property' => null, 'position' => 'first'];
+        $this->scope = null;
     }
 
     /**
@@ -379,7 +398,7 @@ class FeatureContext extends BehatContext
      */
     protected function getResponse()
     {
-        if (!$this->response) {
+        if (! $this->response) {
             throw new Exception("You must first make a request to check a response.");
         }
 
@@ -393,31 +412,31 @@ class FeatureContext extends BehatContext
      */
     protected function getResponsePayload()
     {
-        if (!$this->responsePayload) {
+        if (! $this->responsePayload) {
             $json = json_decode($this->getResponse()->getBody(true));
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                $mesage = 'Failed to decode JSON body ';
+                $message = 'Failed to decode JSON body ';
 
                 switch (json_last_error()) {
                     case JSON_ERROR_DEPTH:
                         $message .= '(Maximum stack depth exceeded).';
-                    break;
+                        break;
                     case JSON_ERROR_STATE_MISMATCH:
                         $message .= '(Underflow or the modes mismatch).';
-                    break;
+                        break;
                     case JSON_ERROR_CTRL_CHAR:
                         $message .= '(Unexpected control character found).';
-                    break;
+                        break;
                     case JSON_ERROR_SYNTAX:
                         $message .= '(Syntax error, malformed JSON).';
-                    break;
+                        break;
                     case JSON_ERROR_UTF8:
                         $message .= '(Malformed UTF-8 characters, possibly incorrectly encoded).';
-                    break;
+                        break;
                     default:
                         $message .= '(Unknown error).';
-                    break;
+                        break;
                 }
 
                 throw new Exception($message);
@@ -439,57 +458,49 @@ class FeatureContext extends BehatContext
     {
         $payload = $this->getResponsePayload();
 
-        if (!$this->scope['property']) {
+        if (! $this->scope) {
             return $payload;
         }
 
-        assertTrue(
-            property_exists($payload, $this->scope['property']),
-            "Ensuring the current property exists within the response payload to change scope.\n{$this->debug($payload)}"
-        );
-
-        $payload = $payload->{$this->scope['property']};
-
-        if (is_array($payload)) {
-            $position = $this->scope['position'];
-
-            if (is_numeric($position)) {
-
-                // When position is 1, index is 0
-                $index = $position - 1;
-
-                assertTrue(
-                    array_key_exists($index, $payload),
-                    "Ensuring index [$index] exists from numeric scope position [$position].\n{$this->debug($payload)}"
-                );
-
-                return $payload[$index];
-            }
-
-            switch ($position) {
-                case 'first':
-                    return reset($payload);
-
-                case 'last':
-                    return end($payload);
-
-                default:
-                    throw new Exception("Invalid scope position [$position] provided.\n{$this->debug($payload)}");
-            }
-        }
-
-        return $payload->{$this->scope};
+        return $this->arrayGet($payload, $this->scope);
     }
 
     /**
-     * Returns a payload in JSON form for debugging.
+     * Get an item from an array using "dot" notation.
      *
-     * @param  mixed  $payload
-     * @return string
+     * @copyright   Taylor Otwell
+     * @link        http://laravel.com/docs/helpers
+     * @param       array   $array
+     * @param       string  $key
+     * @param       mixed   $default
+     * @return      mixed
      */
-    protected function debug($payload)
+    protected function arrayGet($array, $key)
     {
-        return json_encode($payload, JSON_PRETTY_PRINT);
-    }
+        if (is_null($key)) {
+            return $array;
+        }
 
+        // if (isset($array[$key])) {
+        //     return $array[$key];
+        // }
+
+        foreach (explode('.', $key) as $segment) {
+
+            if (is_object($array)) {
+                if (! isset($array->{$segment})) {
+                    return;
+                }
+                $array = $array->{$segment};
+
+            } elseif (is_array($array)) {
+                if (! array_key_exists($segment, $array)) {
+                    return;
+                }
+                $array = $array[$segment];
+            }
+        }
+
+        return $array;
+    }
 }
