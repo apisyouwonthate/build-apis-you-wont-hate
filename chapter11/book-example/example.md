@@ -35,45 +35,66 @@ sections elsewhere on your site.
 Search and manage places.
 
 ## Place List [/places{?lat}{&lon}{&distance}{&box}{&number}{&page}]
-Something
 
 ### Get places [GET]
-Something else
+Locate places close to a certain set of coordinates, or provide a box of coordinates to search within.
 
 + Parameters
 
     + lat (optional, number, `40.7641`) ... Latitude to search near, with any accuracy
     + lon (optional, number, `-73.9866`) ... Longitude to search near, with any accuracy
-    + distance = `10` (optional, number, `20`) ... The radius size to search for from lat and lon coordinates
+    + distance = `10` (optional, number, `20`) ... The radius size in miles to search for from lat and lon coordinates
     + box (optional, string, `40.7641,-73.9866,40.7243,-73.9841`) ... Top left latitude, top left longitude, bottom right latitude, bottom right longitude
-    + number (optional, number, `15`) ... The number of results to return per page
-    + page = `1` (optional, number, `15`) ... Which page of the result data to return
+    + number (optional, integer, `15`) ... The number of results to return per page
+    + page = `1` (optional, integer, `15`) ... Which page of the result data to return
 
 
-+ Response 200
++ Response 200 (application/json)
 
-
-## Create new place [/places]
-
-### Create a place [POST]
-
-+ Response 201
-
-    + Headers
-
-            Content-Type: application/json
-
-    + Body
-
-            {
-                "data": [
+        {
+            "data": [
+                {
                     "id": 2,
                     "name": "Videology",
                     "lat": 40.713857,
                     "lon": -73.961936,
                     "created_at": "2013-04-02"
-                ]
+                },
+                {
+                    "id": 1,
+                    "name": "Barcade",
+                    "lat": 40.712017,
+                    "lon": -73.950995,
+                    "created_at": "2012-09-23"
+                }
+            ]
+        }
+
+## Create new place [/places]
+
+### Create a place [POST]
+
++ Request (application/json)
+
+      + Body
+
+            {
+                "name": "Videology",
+                "lat": 40.713857,
+                "lon": -73.961936
             }
+
++ Response 201 (application/json)
+
+        {
+            "data": [
+                "id": 2,
+                "name": "Videology",
+                "lat": 40.713857,
+                "lon": -73.961936,
+                "created_at": "2013-04-02"
+            ]
+        }
 
 
 
@@ -87,21 +108,15 @@ Manage an existing place.
 ### Get place [GET]
 
 + Response 200
-+ Response 404
++ Response 404 (application/json)
 
-    + Headers
-
-            Content-Type: application/json
-
-    + Body
-
-            {
-              "error" : {
-                "code": "GEN-LIKETHEWIND",
-                "http_code" : 404,
-                "message": "Resource Not Found"
-              }
-            }
+        {
+          "error" : {
+            "code" : "GEN-LIKETHEWIND",
+            "http_code" : 404,
+            "message" : "Resource Not Found"
+          }
+        }
 
 ### Modify place [PUT]
 
@@ -122,21 +137,15 @@ Manage an existing place.
             Authorization: Bearer {access token}
 
 + Response 200
-+ Response 404
++ Response 404 (application/json)
 
-    + Headers
-
-            Content-Type: application/json
-
-    + Body
-
-            {
-              "error" : {
-                "code": "GEN-LIKETHEWIND",
-                "http_code" : 404,
-                "message": "Resource Not Found"
-              }
-            }
+        {
+          "error" : {
+            "code" : "GEN-LIKETHEWIND",
+            "http_code" : 404,
+            "message" : "Resource Not Found"
+          }
+        }
 
 
 ## Place Images [/places/{id}/image]
@@ -177,37 +186,33 @@ Assign a new image or replace the existing image for a place.
             <raw source of png file>
 
 + Response 201
-+ Response 400
++ Response 400 (application/json)
 
-    + Headers
+        {
+          "error" : {
+            "code": "GEN-FUBARGS",
+            "http_code" : 400,
+            "message": "Content-Type must be image/png, image/jpg or image/gif"
+          }
+        }
 
-            Content-Type: application/json
+        {
+          "error" : {
+            "code" : "GEN-FUBARGS",
+            "http_code" : 400,
+            "message" : "No image is provided in HTTP body."
+          }
+        }
 
-    + Body
++ Response 404 (application/json)
 
-            {
-              "error" : {
-                "code": "GEN-FUBARGS",
-                "http_code" : 400,
-                "message": "Content-Type must be image/png, image/jpg or image/gif"
-              }
-            }
-
-+ Response 404
-
-    + Headers
-
-            Content-Type: application/json
-
-    + Body
-
-            {
-              "error" : {
-                "code": "GEN-LIKETHEWIND",
-                "http_code" : 404,
-                "message": "Resource Not Found"
-              }
-            }
+        {
+          "error" : {
+            "code" : "GEN-LIKETHEWIND",
+            "http_code" : 404,
+            "message" : "Resource Not Found"
+          }
+        }
 
 
 ### Delete place image [DELETE]
@@ -220,34 +225,13 @@ Remove the existing image for a place.
             Authorization: Bearer {access token}
 
 + Response 200
-+ Response 400
 
-    + Headers
++ Response 404 (application/json)
 
-            Content-Type: application/json
-
-    + Body
-
-            {
-              "error" : {
-                "code" : "GEN-FUBARGS",
-                "http_code" : 400,
-                "message" : "No lat, lon or box provided."
-              }
-            }
-
-+ Response 404
-
-    + Headers
-
-            Content-Type: application/json
-
-    + Body
-
-            {
-              "error" : {
-                "code" : "GEN-LIKETHEWIND",
-                "http_code" : 404,
-                "message" : "Resource Not Found"
-              }
-            }
+        {
+          "error" : {
+            "code" : "GEN-LIKETHEWIND",
+            "http_code" : 404,
+            "message" : "Resource Not Found"
+          }
+        }
