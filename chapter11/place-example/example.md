@@ -103,7 +103,7 @@ Manage an existing place.
 
 + Parameters
 
-    + id (required, integer) ... The unqiue identifer of a place
+    + id (required, integer) ... The unique identifier of a place
 
 ### Get place [GET]
 
@@ -153,7 +153,7 @@ Places can have an image associated with them, that will act as a cover photo or
 
 + Parameters
 
-    + id (required, integer) ... The unqiue identifer of a place
+    + id (required, integer) ... The unique identifier of a place
 
 ### Set place image [PUT]
 Assign a new image or replace the existing image for a place.
