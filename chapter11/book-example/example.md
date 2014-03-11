@@ -149,6 +149,24 @@ Places can have an image associated with them, that will act as a cover photo or
 ### Set place image [PUT]
 Assign a new image or replace the existing image for a place.
 
++ Request (image/gif)
+
+    + Headers
+
+            Authorization: Bearer {access token}
+    + Body
+
+            <raw source of gif file>
+
++ Request (image/jpeg)
+
+    + Headers
+
+            Authorization: Bearer {access token}
+    + Body
+
+            <raw source of jpeg file>
+
 + Request (image/png)
 
     + Headers
@@ -159,6 +177,22 @@ Assign a new image or replace the existing image for a place.
             <raw source of png file>
 
 + Response 201
++ Response 400
+
+    + Headers
+
+            Content-Type: application/json
+
+    + Body
+
+            {
+              "error" : {
+                "code": "GEN-FUBARGS",
+                "http_code" : 400,
+                "message": "Content-Type must be image/png, image/jpg or image/gif"
+              }
+            }
+
 + Response 404
 
     + Headers
