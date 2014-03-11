@@ -134,7 +134,7 @@ class FeatureContext extends BehatContext
         } else {
             $bodyOutput = 'Output is '.$contentType.', which is not JSON and is therefore scary. Run the request manually.';
         }
-        assertSame($statusCode, $this->getResponse()->getStatusCode(), $bodyOutput);
+        assertSame((int) $statusCode, (int) $this->getResponse()->getStatusCode(), $bodyOutput);
     }
 
     /**
