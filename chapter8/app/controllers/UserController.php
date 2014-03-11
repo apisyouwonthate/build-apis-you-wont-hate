@@ -8,8 +8,6 @@ class UserController extends ApiController
     {
         $users = User::take(10)->with('checkins', 'checkins.place')->get();
 
-        Log::info($users);
-
         return $this->respondWithCollection($users, new UserTransformer);
     }
 
