@@ -12,7 +12,7 @@ Also Markdown *formatted*. This also includes automatic "smartypants" formatting
 Another paragraph. Code sample:
 
 ```http
-Authorization: bearer 5262d64b892e8d4341000001
+Authorization: Bearer vr5HmMkzlxKE70W1y4MibiJUusZwZC25NOVBEx3BD1
 ```
 
 And some code with no highlighting:

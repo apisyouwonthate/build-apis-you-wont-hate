@@ -13,7 +13,7 @@ This could be anything, but it seems like a good place to explain how access tok
 Most endpoints in the FakeSquare API will require the `Authorization` HTTP header.
 
 ```http
-Authorization: bearer 5262d64b892e8d4341000001
+Authorization: Bearer vr5HmMkzlxKE70W1y4MibiJUusZwZC25NOVBEx3BD1
 ```
 
 Failing to do so will cause the following error:
