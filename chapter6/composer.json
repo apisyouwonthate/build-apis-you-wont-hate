@@ -5,8 +5,8 @@
 	"license": "MIT",
 	"require": {
         "fzaninotto/Faker": "1.2.*",
-		"laravel/framework": "4.0.*",
-		"league/fractal": "0.6.*"
+		"laravel/framework": "4.1.*",
+		"league/fractal": "0.7.*"
 	},
 	"autoload": {
 		"classmap": [
