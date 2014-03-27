@@ -1,14 +1,14 @@
 <?php
 
-use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Context\BehatContext,
-    Behat\Behat\Exception\PendingException;
-use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
+use Behat\Behat\Context\ClosuredContextInterface;
+use Behat\Behat\Context\TranslatedContextInterface;
+use Behat\Behat\Context\BehatContext;
+use Behat\Exception\PendingException;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
 
-use Guzzle\Service\Client,
-    Guzzle\Http\Exception\BadResponseException;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
 
 //
 // Require 3rd-party libraries here:
@@ -17,8 +17,8 @@ use Guzzle\Service\Client,
 //   require_once 'PHPUnit/Framework/Assert/Functions.php';
 //
 
-require_once __DIR__.'/../../../../vendor/phpunit/phpunit/PHPUnit/Autoload.php';
-require_once __DIR__.'/../../../../vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';
+require_once __DIR__.'/../../../../../vendor/phpunit/phpunit/PHPUnit/Autoload.php';
+require_once __DIR__.'/../../../../../vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';
 
 /**
  * Features context.
@@ -66,11 +66,9 @@ class FeatureContext extends BehatContext
     {
         $config = isset($parameters['guzzle']) && is_array($parameters['guzzle']) ? $parameters['guzzle'] : [];
 
-        $this->client = new Client($parameters['base_url'], $config);
-        $this->client->setDefaultHeaders([
-            'Accept' => 'application/vnd.com.example.api-v1+json',
-            'Authorization' => "Bearer {$parameters['access_token']}",
-        ]);
+        $config['base_url'] = $parameters['base_url'];
+
+        $this->client = new Client($config);
     }
 
     /**
@@ -96,15 +94,13 @@ class FeatureContext extends BehatContext
                 case 'POST':
                     $this->response = $this
                         ->client
-                        ->$method($resource, null, $this->requestPayload)
-                        ->send();
+                        ->$method($resource, null, $this->requestPayload);
                     break;
 
                 default:
                     $this->response = $this
                         ->client
-                        ->$method($resource)
-                        ->send();
+                        ->$method($resource);
             }
         } catch (BadResponseException $e) {
 
