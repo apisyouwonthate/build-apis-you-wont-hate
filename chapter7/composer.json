@@ -1,13 +1,13 @@
 {
-	"name": "laravel/laravel",
-	"description": "The Laravel Framework.",
-	"keywords": ["framework", "laravel"],
-	"license": "MIT",
 	"require": {
-		"fzaninotto/Faker": "1.2.*",
-		"laravel/framework": "4.0.*",
-		"league/fractal": "0.6.*"
+        "fzaninotto/Faker": "1.2.*",
+		"laravel/framework": "4.1.*",
+		"league/fractal": "0.7.*",
+		"guzzlehttp/guzzle": "4.*"
 	},
+	"require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
 	"autoload": {
 		"classmap": [
 			"app/commands",
@@ -20,19 +20,6 @@
         "psr-0": {
             "App": "app/src/"
         }
-
-	},
-	"scripts": {
-		"post-install-cmd": [
-			"php artisan optimize"
-		],
-		"post-update-cmd": [
-			"php artisan clear-compiled",
-			"php artisan optimize"
-		],
-		"post-create-project-cmd": [
-			"php artisan key:generate"
-		]
 	},
 	"config": {
 		"preferred-install": "dist"
