@@ -21,18 +21,6 @@
             "App": "app/src/"
         }
 	},
-	"scripts": {
-		"post-install-cmd": [
-			"php artisan optimize"
-		],
-		"post-update-cmd": [
-			"php artisan clear-compiled",
-			"php artisan optimize"
-		],
-		"post-create-project-cmd": [
-			"php artisan key:generate"
-		]
-	},
 	"config": {
 		"preferred-install": "dist"
 	},
