@@ -1,0 +1,4 @@
+default:
+  context:
+    parameters:
+        base_url: http://localhost:8000
