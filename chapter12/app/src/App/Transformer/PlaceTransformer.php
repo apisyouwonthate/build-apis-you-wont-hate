@@ -28,6 +28,21 @@ class PlaceTransformer extends TransformerAbstract
             'zip'          => (float) $place->zip,
             'website'      => $place->website,
             'phone'        => $place->phone,
+
+            'links'        => [
+                [
+                    'rel' => 'self',
+                    'uri' => '/places/'.$place->id,
+                ],
+                [
+                    'rel' => 'place.checkins',
+                    'uri' => '/places/'.$place->id.'/checkins',
+                ],
+                [
+                    'rel' => 'place.image',
+                    'uri' => '/places/'.$place->id.'/image',
+                ]
+            ],
         ];
     }
 

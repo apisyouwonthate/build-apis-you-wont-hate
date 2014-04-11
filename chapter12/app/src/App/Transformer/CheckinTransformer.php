@@ -27,6 +27,13 @@ class CheckinTransformer extends TransformerAbstract
         return [
             'id'          => (int) $checkin->id,
             'created_at'  => (string) $checkin->created_at,
+
+            'links'        => [
+                [
+                    'rel' => 'self',
+                    'uri' => '/checkins/'.$checkin->id,
+                ],
+            ],
         ];
     }
 

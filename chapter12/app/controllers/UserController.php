@@ -1,5 +1,6 @@
 <?php
 
+use App\Transformer\CheckinTransformer;
 use App\Transformer\UserTransformer;
 
 class UserController extends ApiController
@@ -11,10 +12,25 @@ class UserController extends ApiController
         return $this->respondWithCollection($users, new UserTransformer);
     }
 
-    public function show($id)
+    public function show($userId)
     {
-        $user = User::find($id);
+        $user = User::find($userId);
+
+        if (! $user) {
+            return $this->errorNotFound('User not found');
+        }
 
         return $this->respondWithItem($user, new UserTransformer);
+    }
+
+    public function getCheckins($userId)
+    {
+        $user = User::find($userId);
+
+        if (! $user) {
+            return $this->errorNotFound('User not found');
+        }
+
+        return $this->respondWithCollection($user->checkins, new CheckinTransformer);
     }
 }

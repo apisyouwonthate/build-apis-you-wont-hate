@@ -25,6 +25,17 @@ class UserTransformer extends TransformerAbstract
             'location'       => $user->location,
             'birthday'       => $user->birthday,
             'joined'         => (string) $user->created_at,
+
+            'links'        => [
+                [
+                    'rel' => 'self',
+                    'uri' => '/users/'.$user->id,
+                ],
+                [
+                    'rel' => 'user.checkins',
+                    'uri' => '/users/'.$user->id.'/checkins',
+                ],
+            ],
         ];
     }
 

@@ -13,6 +13,9 @@
 
 Route::get('/users', 'UserController@index');
 Route::get('/users/{id}', 'UserController@show');
+Route::get('/users/{id}/checkins', 'UserController@checkins');
 
 Route::get('/places', 'PlaceController@index');
 Route::get('/places/{id}', 'PlaceController@show');
+Route::get('/places/{id}/checkins', 'PlaceController@getCheckins');
+Route::get('/places/{id}/image', 'PlaceController@uploadImage');

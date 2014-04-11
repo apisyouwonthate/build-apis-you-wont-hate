@@ -3,6 +3,7 @@
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Manager;
+use Symfony\Component\Yaml\Dumper as YamlDumper;
 
 class ApiController extends Controller
 {
@@ -13,6 +14,7 @@ class ApiController extends Controller
     const CODE_INTERNAL_ERROR = 'GEN-AAAGGH';
     const CODE_UNAUTHORIZED = 'GEN-MAYBGTFO';
     const CODE_FORBIDDEN = 'GEN-GTFO';
+    const CODE_INVALID_MIME_TYPE = 'GEN-UMWUT';
 
     public function __construct(Manager $fractal)
     {
@@ -26,11 +28,11 @@ class ApiController extends Controller
 
     public function fireDebugFilters()
     {
-        $this->beforeFilter(function() {
+        $this->beforeFilter(function () {
             Event::fire('clockwork.controller.start');
         });
 
-        $this->afterFilter(function() {
+        $this->afterFilter(function () {
             Event::fire('clockwork.controller.end');
         });
     }
@@ -78,9 +80,43 @@ class ApiController extends Controller
 
     protected function respondWithArray(array $array, array $headers = [])
     {
-        $response = Response::json($array, $this->statusCode, $headers);
+        $mimeTypeRaw = Input::server('HTTP_ACCEPT', '*/*');
 
-        // $response->header('Content-Type', 'application/json');
+        // If its empty or has */* then default to JSON
+        if ($mimeTypeRaw === '*/*') {
+            $mimeType = 'application/json';
+        } else {
+             // You will probably want to do something intelligent with charset if provided.
+            // This chapter just assumes UTF8 everything everywhere.
+            $mimeParts = (array) explode(';', $mimeTypeRaw);
+            $mimeType = strtolower($mimeParts[0]);
+        }
+
+        switch ($mimeType) {
+            case 'application/json':
+                $contentType = 'application/json';
+                $content = json_encode($array);
+                break;
+
+            case 'application/x-yaml':
+                $contentType = 'application/x-yaml';
+                $dumper = new YamlDumper();
+                $content = $dumper->dump($array, 2);
+                break;
+
+            default:
+                $contentType = 'application/json';
+                $content = json_encode([
+                    'error' => [
+                        'code' => static::CODE_INVALID_MIME_TYPE,
+                        'http_code' => 415,
+                        'message' => sprintf('Content of type %s is not supported.', $mimeType),
+                    ]
+                ]);
+        }
+
+        $response = Response::make($content, $this->statusCode, $headers);
+        $response->header('Content-Type', $contentType);
 
         return $response;
     }
