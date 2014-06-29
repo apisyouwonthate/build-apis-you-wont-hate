@@ -26,7 +26,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	public function checkins()
 	{
-		$return $this->hasMany('Checkin');
+		return $this->hasMany('Checkin');
 	}
 
 	/**
