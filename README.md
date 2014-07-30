@@ -2,7 +2,7 @@
 
 This repository contains sample code that is supplied with the book of the same name.
 
-["Build APIs You Wont Hate" on LeanPub](http://leanpub.com/build-apis-you-wont-hate)
+["Build APIs You Wont Hate" on LeanPub](http://apisyouwonthate.com)
 
 Some chapters are just theory, and some chapters will have sections that rely on sample code. 
 I have tried to avoid making this a book of code, and the book is intended to be language 
