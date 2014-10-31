@@ -23,9 +23,9 @@ class PlaceController extends ApiController
         return $this->respondWithItem($place, new PlaceTransformer);
     }
 
-    public function getCheckins($userId)
+    public function getCheckins($placeId)
     {
-        $place = Place::find($userId);
+        $place = Place::find($placeId);
 
         if (! $place) {
             return $this->errorNotFound('Place not found');
