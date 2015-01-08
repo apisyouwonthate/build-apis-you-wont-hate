@@ -40,6 +40,6 @@ class PlaceTransformer extends TransformerAbstract
     {
         $checkins = $place->checkins;
 
-        return $this->collectionResource($checkins, new CheckinTransformer);
+        return $this->collection($checkins, new CheckinTransformer);
     }
 }
