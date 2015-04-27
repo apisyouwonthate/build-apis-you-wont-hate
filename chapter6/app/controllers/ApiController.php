@@ -94,7 +94,8 @@ class ApiController extends Controller
      */
     public function errorForbidden($message = 'Forbidden')
     {
-        return $this->setStatusCode(403)->respondWithError($message, self::CODE_FORBIDDEN);
+        return $this->setStatusCode(403)
+          ->respondWithError($message, self::CODE_FORBIDDEN);
     }
 
     /**
@@ -104,7 +105,8 @@ class ApiController extends Controller
      */
     public function errorInternalError($message = 'Internal Error')
     {
-        return $this->setStatusCode(500)->respondWithError($message, self::CODE_INTERNAL_ERROR);
+        return $this->setStatusCode(500)
+          ->respondWithError($message, self::CODE_INTERNAL_ERROR);
     }
     
     /**
@@ -114,7 +116,8 @@ class ApiController extends Controller
      */
     public function errorNotFound($message = 'Resource Not Found')
     {
-        return $this->setStatusCode(404)->respondWithError($message, self::CODE_NOT_FOUND);
+        return $this->setStatusCode(404)
+          ->respondWithError($message, self::CODE_NOT_FOUND);
     }
 
     /**
@@ -124,7 +127,8 @@ class ApiController extends Controller
      */
     public function errorUnauthorized($message = 'Unauthorized')
     {
-        return $this->setStatusCode(401)->respondWithError($message, self::CODE_UNAUTHORIZED);
+        return $this->setStatusCode(401)
+          ->respondWithError($message, self::CODE_UNAUTHORIZED);
     }
 
     /**
@@ -134,6 +138,7 @@ class ApiController extends Controller
      */
     public function errorWrongArgs($message = 'Wrong Arguments')
     {
-        return $this->setStatusCode(400)->respondWithError($message, self::CODE_WRONG_ARGS);
+        return $this->setStatusCode(400)
+          ->respondWithError($message, self::CODE_WRONG_ARGS);
     }
 }
