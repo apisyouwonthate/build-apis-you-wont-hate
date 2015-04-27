@@ -86,8 +86,8 @@ class ApiController extends Controller
         if ($mimeTypeRaw === '*/*') {
             $mimeType = 'application/json';
         } else {
-             // You will probably want to do something intelligent with charset if provided.
-            // This chapter just assumes UTF8 everything everywhere.
+            // You'll probably want to do something intelligent with charset if provided
+            // This chapter just assumes UTF8 everything everywhere
             $mimeParts = (array) explode(';', $mimeTypeRaw);
             $mimeType = strtolower($mimeParts[0]);
         }

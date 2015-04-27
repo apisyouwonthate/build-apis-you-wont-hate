@@ -3,8 +3,10 @@ HOST: https://api.example.com
 
 # FakeSquare API
 
-This is documentation for the theoretical checkin app API that has been built througout the
-book [Build APIs You Wont Hate](https://leanpub.com/build-apis-you-wont-hate).
+This is documentation for the theoretical checkin app API that has been built
+throughout the book [Build APIs You Won't Hate].
+
+[Build APIs You Won't Hate]: https://leanpub.com/build-apis-you-wont-hate
 
 ## Authorization
 
