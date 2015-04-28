@@ -10,7 +10,8 @@ throughout the book [Build APIs You Won't Hate].
 
 ## Authorization
 
-This could be anything, but it seems like a good place to explain how access tokens work.
+This could be anything, but it seems like a good place to explain how
+access tokens work.
 
 Most endpoints in the FakeSquare API will require the `Authorization` HTTP header.
 
