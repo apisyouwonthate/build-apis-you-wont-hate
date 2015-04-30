@@ -22,13 +22,13 @@ class ApiController extends Controller
     /**
      * Getter for statusCode
      *
-     * @return mixed
+     * @return int
      */
     public function getStatusCode()
     {
         return $this->statusCode;
     }
-    
+
     /**
      * Setter for statusCode
      *
@@ -41,7 +41,7 @@ class ApiController extends Controller
         $this->statusCode = $statusCode;
         return $this;
     }
-    
+
     protected function respondWithItem($item, $callback)
     {
         $resource = new Item($item, $callback);
@@ -90,7 +90,7 @@ class ApiController extends Controller
     /**
      * Generates a Response with a 403 HTTP header and a given message.
      *
-     * @return  Response
+     * @return Response
      */
     public function errorForbidden($message = 'Forbidden')
     {
@@ -101,18 +101,18 @@ class ApiController extends Controller
     /**
      * Generates a Response with a 500 HTTP header and a given message.
      *
-     * @return  Response
+     * @return Response
      */
     public function errorInternalError($message = 'Internal Error')
     {
         return $this->setStatusCode(500)
           ->respondWithError($message, self::CODE_INTERNAL_ERROR);
     }
-    
+
     /**
      * Generates a Response with a 404 HTTP header and a given message.
      *
-     * @return  Response
+     * @return Response
      */
     public function errorNotFound($message = 'Resource Not Found')
     {
@@ -123,7 +123,7 @@ class ApiController extends Controller
     /**
      * Generates a Response with a 401 HTTP header and a given message.
      *
-     * @return  Response
+     * @return Response
      */
     public function errorUnauthorized($message = 'Unauthorized')
     {
@@ -134,7 +134,7 @@ class ApiController extends Controller
     /**
      * Generates a Response with a 400 HTTP header and a given message.
      *
-     * @return  Response
+     * @return Response
      */
     public function errorWrongArgs($message = 'Wrong Arguments')
     {

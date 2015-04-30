@@ -14,4 +14,4 @@ Open your browser and go to `http://localhost:5000/users` to see [Fractal][] run
 some of its glory. It can do a lot more than just type-cast an array.
 
 [Build APIs You Won't Hate]: http://leanpub.com/build-apis-you-wont-hate
-[Fractal]: https://github.com/php-loep/fractal
+[Fractal]: https://github.com/thephpleague/fractal
