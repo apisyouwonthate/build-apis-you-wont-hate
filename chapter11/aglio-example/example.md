@@ -12,7 +12,7 @@ Also Markdown *formatted*. This also includes automatic "smartypants" formatting
 Another paragraph. Code sample:
 
 ```http
-Authorization: Bearer vr5HmMkzlxKE70W1y4MibiJUusZwZC25NOVBEx3BD1
+Authorization: bearer 5262d64b892e8d4341000001
 ```
 
 And some code with no highlighting:
@@ -58,7 +58,7 @@ Note list description
 Get a list of notes.
 
 + Response 200
-    
+
     [Note List][]
 
 ### Create New Note [POST]
@@ -96,7 +96,7 @@ Note description
 
 + Parameters
 
-    + id (required, string, `68a5sdf67`) ... The note ID
+    + id: `68a5sdf67` (required, string) - The note ID
 
 + Model
 
@@ -195,18 +195,24 @@ A list of users
 
 + Parameters
 
-    + name (optional, string, `alice`) ... Search for a user by name
-    + joinedBefore (optional, string, `2011-01-01`) ... Search by join date
-    + joinedAfter (optional, string, `2011-01-01`) ... Search by join date
-    + sort = `name` (optional, string, `joined`) ... Which field to sort by
-
-        + Values
+    + name: `alice` (string, optional) - Search for a user by name
+    + joinedBefore: `2011-01-01` (string, optional) - Search by join date
+    + joinedAfter: `2011-01-01` (string, optional, ) - Search by join date
+    + sort: `joined` (string, optional) - Which field to sort by
+        + Default: `name`
+        + Members
             + `name`
             + `joined`
             + `-joined`
-
-    + limit = `10` (optional, integer, `25`) ... The maximum number of users to return, up to `50`
-
+            + `age`
+            + `-age`
+            + `location`
+            + `-location`
+            + `plan`
+            + `-plan`
+    + limit: `25` (integer, optional) ... The maximum number of users to return, up to `50`
+      + Default: `10`
+      
 + Model
 
     + Headers
@@ -228,28 +234,6 @@ A list of users
                 }
             ]
 
-    + Schema
-
-            {
-                "type": "array",
-                "maxItems": 50,
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "type": "string"
-                        },
-                        "image": {
-                            "type": "string"
-                        },
-                        "joined": {
-                            "type": "string",
-                            "pattern": "\d{4}-\d{2}-\d{2}"
-                        }
-                    }
-                }
-            }
-
 ### Get users [GET]
 Get a list of users. Example:
 
@@ -261,7 +245,7 @@ https://api.mywebsite.com/users?sort=joined&limit=5
 
     [User List][]
 
-# Group Tags
+# Group Tags and Tagging Long Title
 Get or set tags on notes
 
 ## GET /tags
