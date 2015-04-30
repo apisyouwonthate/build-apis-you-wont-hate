@@ -1,6 +1,6 @@
-## Chapter 6: Outputting Data
+## Chapter 12: HATEOAS
 
-This is sample code for Chapter 6 of the book [Build APIs You Won't Hate][].
+This is sample code for Chapter 12 of the book [Build APIs You Won't Hate][].
 
     $ php artisan migrate
     $ php artisan db:seed
