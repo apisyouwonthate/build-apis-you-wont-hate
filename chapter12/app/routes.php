@@ -13,7 +13,7 @@
 
 Route::get('/users', 'UserController@index');
 Route::get('/users/{id}', 'UserController@show');
-Route::get('/users/{id}/checkins', 'UserController@checkins');
+Route::get('/users/{id}/checkins', 'UserController@getCheckins');
 
 Route::get('/places', 'PlaceController@index');
 Route::get('/places/{id}', 'PlaceController@show');
