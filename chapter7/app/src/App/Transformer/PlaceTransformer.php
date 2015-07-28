@@ -25,7 +25,7 @@ class PlaceTransformer extends TransformerAbstract
             'address2'     => $place->address2,
             'city'         => $place->city,
             'state'        => $place->state,
-            'zip'          => (float) $place->zip,
+            'zip'          => $place->zip,
             'website'      => $place->website,
             'phone'        => $place->phone,
         ];
