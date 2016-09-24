@@ -80,7 +80,7 @@ class FeatureContext extends BehatContext
     }
 
     /**
-     * @When /^I request "(GET|PUT|POST|DELETE) ([^"]*)"$/
+     * @When /^I request "(GET|PUT|POST|DELETE|PATCH) ([^"]*)"$/
      */
     public function iRequest($httpMethod, $resource)
     {
