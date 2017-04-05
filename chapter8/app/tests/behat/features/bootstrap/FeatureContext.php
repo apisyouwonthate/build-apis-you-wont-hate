@@ -94,7 +94,7 @@ class FeatureContext extends BehatContext
                 case 'POST':
                     $this->response = $this
                         ->client
-                        ->$method($resource, null, $this->requestPayload);
+                        ->$method($resource, ['body' => $this->requestPayload]);
                     break;
 
                 default:
